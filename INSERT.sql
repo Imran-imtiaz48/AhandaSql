@@ -1,22 +1,15 @@
---INSERT
---Veri Ekleme
-INSERT INTO Fakulteler(Isim,Dekan)
-VALUES('Ziraat Fakültesi', 'Oktay Çalýþkan')
+-- INSERT into Fakulteler (Faculties)
+INSERT INTO Fakulteler (Isim, Dekan)
+VALUES 
+    ('Ziraat FakÃ¼ltesi', 'Oktay Ã‡alÄ±ÅŸkan'),
+    ('MÃ¼hendislik FakÃ¼ltesi', NULL),
+    ('GÃ¼zel Sanatlar FakÃ¼ltesi', 'Hasan HÃ¼seyin Badak');
 
-INSERT INTO Fakulteler(Isim)
-VALUES('Mühendislik Fakültesi')
-
-INSERT INTO Fakulteler(Isim, Dekan)
-VALUES('Güzel Sanatlar Fakültesi','Hasan Hüseyin Badak')
-
-INSERT INTO Bolumler(Isim, Fakulte_ID)
-VALUES('Fizik Bölümü', 1)
-INSERT INTO Bolumler(Isim, Fakulte_ID)
-VALUES('Kimya Bölümü', 1)
-INSERT INTO Bolumler(Isim, Fakulte_ID)
-VALUES('Karþýlaþtýrmalý Edebiyat', 1)
-INSERT INTO Bolumler(Isim, Fakulte_ID)
-VALUES('Biyoloji Bölümü', 1)
-
-INSERT INTO Bolumler(Isim, Fakulte_ID)
-VALUES('Elektrik Mühendisliði', 3)
+-- INSERT into Bolumler (Departments)
+INSERT INTO Bolumler (Isim, Fakulte_ID)
+VALUES
+    ('Fizik BÃ¶lÃ¼mÃ¼', 1),
+    ('Kimya BÃ¶lÃ¼mÃ¼', 1),
+    ('KarÅŸÄ±laÅŸtÄ±rmalÄ± Edebiyat', 1),
+    ('Biyoloji BÃ¶lÃ¼mÃ¼', 1),
+    ('Elektrik MÃ¼hendisliÄŸi', 3);
