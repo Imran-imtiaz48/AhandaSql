@@ -1,41 +1,85 @@
-SELECT * FROM Categories
-SELECT * FROM Products
+-- Kategoriler ve Ã¼rÃ¼nlerin tÃ¼m bilgileri
+SELECT * FROM Categories;
+SELECT * FROM Products;
 
-SELECT Products.ProductID, Products.ProductName, Products.CategoryID, Categories.CategoryName
-FROM Products
-JOIN Categories ON Products.CategoryID = Categories.CategoryID
+-- ÃœrÃ¼n bilgileri ile birlikte kategori adlarÄ±nÄ± listele
+SELECT 
+    P.ProductID, 
+    P.ProductName, 
+    P.CategoryID, 
+    C.CategoryName
+FROM Products AS P
+JOIN Categories AS C ON P.CategoryID = C.CategoryID;
 
-SELECT Products.ProductID, Products.ProductName,Categories.CategoryName, Products.UnitsInStock, Products.UnitPrice
-FROM Products
-JOIN Categories ON Products.CategoryID = Categories.CategoryID
+-- ÃœrÃ¼n adÄ±, kategori adÄ±, stok ve fiyat bilgisi
+SELECT 
+    P.ProductID, 
+    P.ProductName,
+    C.CategoryName, 
+    P.UnitsInStock, 
+    P.UnitPrice
+FROM Products AS P
+JOIN Categories AS C ON P.CategoryID = C.CategoryID;
 
-SELECT Products.*, Categories.*
-FROM Products
-JOIN Categories ON Categories.CategoryID = Products.CategoryID
+-- ÃœrÃ¼nler ve kategoriler: tÃ¼m kolonlar
+SELECT 
+    P.*, 
+    C.*
+FROM Products AS P
+JOIN Categories AS C ON P.CategoryID = C.CategoryID;
 
-SELECT p.ProductID, p.ProductName, c.CategoryName, p.UnitsInStock, p.ReorderLevel, p.UnitPrice, p.Discontinued
+-- DetaylÄ± Ã¼rÃ¼n bilgileri: kategori ve stok durumlarÄ±yla birlikte
+SELECT 
+    P.ProductID, 
+    P.ProductName, 
+    C.CategoryName, 
+    P.UnitsInStock, 
+    P.ReorderLevel, 
+    P.UnitPrice, 
+    P.Discontinued
+FROM Products AS P
+JOIN Categories AS C ON P.CategoryID = C.CategoryID;
+
+-- ÃœrÃ¼nlerin ID, isim, kategori adÄ±, tedarikÃ§i firma adÄ±, yetkili kiÅŸi, stok ve fiyat bilgisi
+SELECT 
+    P.ProductID, 
+    P.ProductName, 
+    C.CategoryName, 
+    S.CompanyName, 
+    S.ContactName, 
+    P.UnitsInStock, 
+    P.UnitPrice
 FROM Products AS P
 JOIN Categories AS C ON P.CategoryID = C.CategoryID
+JOIN Suppliers AS S ON P.SupplierID = S.SupplierID;
 
---Ürünlerin ID,Ýsim Kategori Adý, Tedarikçi Firme Adý, Tedarikçi firma yetkilisi, stok miktarý, Fiyatý
-SELECT p.ProductID, p.ProductName, C.CategoryName, s.CompanyName, s.ContactName, p.UnitsInStock, p.UnitPrice
+-- SipariÅŸ verilmesi gereken Ã¼rÃ¼nler (satÄ±ÅŸta olan ve stok seviyesi dÃ¼ÅŸÃ¼k Ã¼rÃ¼nler)
+-- ÃœrÃ¼n ID, isim, kategori adÄ±, tedarikÃ§i bilgileri, stok ve gÃ¼venlik stoÄŸu farkÄ±
+SELECT 
+    P.ProductID, 
+    P.ProductName, 
+    C.CategoryName, 
+    S.CompanyName, 
+    S.ContactName, 
+    S.Phone, 
+    P.UnitsInStock, 
+    P.ReorderLevel, 
+    (P.ReorderLevel - P.UnitsInStock) AS StockDeficit
 FROM Products AS P
 JOIN Categories AS C ON P.CategoryID = C.CategoryID
 JOIN Suppliers AS S ON P.SupplierID = S.SupplierID
+WHERE P.UnitsInStock <= P.ReorderLevel AND P.Discontinued = 0;
 
---Sipariþ vermem gereken satýþtaki ürünlerin
---Ürünlerin ID,Ýsim Kategori Adý, Tedarikçi Firma Adý, 
---Tedarikçi firma yetkilisi, Firma Telefon numarasý, stok miktarý, Güvenlik Stoðu, Güvenlik stoðu ve stok farký
-SELECT p.ProductID, p.ProductName, C.CategoryName, s.CompanyName, s.ContactName,S.Phone, P.UnitsInStock, P.ReorderLevel, P.ReorderLevel - P.UnitsInStock AS Fark
-FROM Products AS P
-JOIN Categories AS C ON P.CategoryID = C.CategoryID
-JOIN Suppliers AS S ON P.SupplierID = S.SupplierID
-WHERE P.UnitsInStock <= P.ReorderLevel AND P.Discontinued = 0
+-- SipariÅŸ detaylarÄ± tablosu
+SELECT * FROM [Order Details];
 
-SELECT * FROM [Order Details]
-
---Sipariþ Detaylarý tabosunu ürün isimleri ile birlikte yazýnýz
-SELECT P.ProductName, P.UnitPrice AS ListPrice, OD.UnitPrice, OD.Quantity, OD.Discount, OD.Quantity * OD.UnitPrice AS Total
+-- SipariÅŸ detaylarÄ±nÄ± Ã¼rÃ¼n isimleri ile listele
+SELECT 
+    P.ProductName, 
+    P.UnitPrice AS ListPrice, 
+    OD.UnitPrice AS SalePrice, 
+    OD.Quantity, 
+    OD.Discount, 
+    (OD.Quantity * OD.UnitPrice * (1 - OD.Discount)) AS Total
 FROM [Order Details] AS OD
-JOIN Products AS P ON OD.ProductID = P.ProductID
-
+JOIN Products AS P ON OD.ProductID = P.ProductID;
