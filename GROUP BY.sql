@@ -1,49 +1,53 @@
---Hangi Kategoride Kaç Adet Ürün Var
-SELECT COUNT(*) FROM Products
+-- Hangi kategoride kaÃ§ adet Ã¼rÃ¼n var
+SELECT CategoryID, COUNT(*) AS ProductCount
+FROM Products
+GROUP BY CategoryID;
 
-SELECT CategoryID, COUNT(*) FROM Products
-GROUP BY CategoryID
-
---Kategori Adýna Göre Hangi Kategoride Kaç Adet Ürün Var
-SELECT C.CategoryName, COUNT(*) AS Adet
+-- Kategori adÄ±na gÃ¶re hangi kategoride kaÃ§ adet Ã¼rÃ¼n var
+SELECT C.CategoryName, COUNT(*) AS ProductCount
 FROM Products AS P
 JOIN Categories AS C ON P.CategoryID = C.CategoryID
-GROUP BY C.CategoryName
+GROUP BY C.CategoryName;
 
-SELECT C.CategoryName, COUNT(*) AS Adet
+-- Sadece satÄ±ÅŸta olan Ã¼rÃ¼nler: Hangi kategoride kaÃ§ adet var
+SELECT C.CategoryName, COUNT(*) AS ProductCount
 FROM Products AS P
 JOIN Categories AS C ON P.CategoryID = C.CategoryID
 WHERE P.Discontinued = 0
-GROUP BY C.CategoryName
+GROUP BY C.CategoryName;
 
---Hangi Personelim kaç adet satýþ yapmýþ
-SELECT E.FirstName, E.LastName, COUNT(*) AS Total
+-- Hangi personelim kaÃ§ adet satÄ±ÅŸ yapmÄ±ÅŸ
+SELECT E.FirstName, E.LastName, COUNT(*) AS TotalOrders
 FROM Orders AS O
 JOIN Employees AS E ON O.EmployeeID = E.EmployeeID
-GROUP BY E.FirstName,E.LastName
-ORDER BY Total DESC
+GROUP BY E.FirstName, E.LastName
+ORDER BY TotalOrders DESC;
 
-SELECT E.TitleOfCourtesy + ' ' + E.FirstName + ' ' + E.LastName AS Employee, COUNT(*) AS Total
+-- ÃœnvanlÄ± isimle hangi personelim kaÃ§ satÄ±ÅŸ yapmÄ±ÅŸ
+SELECT 
+    E.TitleOfCourtesy + ' ' + E.FirstName + ' ' + E.LastName AS EmployeeName,
+    COUNT(*) AS TotalOrders
 FROM Orders AS O
 JOIN Employees AS E ON O.EmployeeID = E.EmployeeID
 GROUP BY E.TitleOfCourtesy + ' ' + E.FirstName + ' ' + E.LastName
-ORDER BY Total DESC
+ORDER BY TotalOrders DESC;
 
---Hangi Ürünümden Ne Kadarlýk Satýþ Yapýlmýþ
-SELECT P.ProductName, SUM(OD.Quantity * OD.UnitPrice) AS Total
+-- Hangi Ã¼rÃ¼nden ne kadarlÄ±k satÄ±ÅŸ yapÄ±lmÄ±ÅŸ
+SELECT 
+    P.ProductName, 
+    SUM(OD.Quantity * OD.UnitPrice) AS TotalSalesAmount
 FROM [Order Details] AS OD
 JOIN Products AS P ON OD.ProductID = P.ProductID
-GROUP BY P.ProductName ORDER BY Total DESC
+GROUP BY P.ProductName
+ORDER BY TotalSalesAmount DESC;
 
-
---Hangi Personelim Ne Kadarlýk Satýþ Yapmýþ
-SELECT * FROM Orders
-SELECT * FROM [Order Details]
-
-SELECT E.FirstName + ' ' + E.LastName AS Employee, SUM(OD.Quantity * OD.UnitPrice) AS Total
+-- Hangi personelim ne kadarlÄ±k satÄ±ÅŸ yapmÄ±ÅŸ (Brezilya gÃ¶nderileri iÃ§in)
+SELECT 
+    E.FirstName + ' ' + E.LastName AS EmployeeName,
+    SUM(OD.Quantity * OD.UnitPrice) AS TotalSalesToBrazil
 FROM [Order Details] AS OD
 JOIN Orders AS O ON OD.OrderID = O.OrderID
 JOIN Employees AS E ON O.EmployeeID = E.EmployeeID
 WHERE O.ShipCountry = 'Brazil'
-GROUP BY  E.FirstName + ' ' + E.LastName ORDER BY Total DESC
-
+GROUP BY E.FirstName + ' ' + E.LastName
+ORDER BY TotalSalesToBrazil DESC;
