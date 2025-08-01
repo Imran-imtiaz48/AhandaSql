@@ -1,17 +1,18 @@
---COUNT
-SELECT COUNT(*) FROM Products
-SELECT COUNT(*) FROM Categories
+-- COUNT: ÃœrÃ¼n ve kategori sayÄ±sÄ±
+SELECT COUNT(*) AS ProductCount FROM Products;
+SELECT COUNT(*) AS CategoryCount FROM Categories;
 
-SELECT * FROM Products
---SUM
-SELECT SUM(UnitsInStock) FROM Products
+-- TÃ¼m Ã¼rÃ¼nleri listele
+SELECT * FROM Products;
 
---Stoðumda toplam ne kadarlýk ürün var
-SELECT SUM(UnitsInStock * UnitPrice) AS TotalPrice FROM Products
+-- SUM: Toplam stok adedi
+SELECT SUM(UnitsInStock) AS TotalUnitsInStock FROM Products;
 
---Toplam Kaç Adet Satýþ yapýlmýþ
-SELECT COUNT(*) FROM Orders
+-- StoÄŸumda toplam ne kadarlÄ±k Ã¼rÃ¼n var
+SELECT SUM(UnitsInStock * UnitPrice) AS TotalStockValue FROM Products;
 
---Toplam Ne kadarlýk satýþ yapýlmýþ
-SELECT SUM(UnitPrice * Quantity) AS TotalPrice FROM [Order Details]
+-- Toplam kaÃ§ adet satÄ±ÅŸ yapÄ±lmÄ±ÅŸ
+SELECT COUNT(*) AS TotalOrderCount FROM Orders;
 
+-- Toplam ne kadarlÄ±k satÄ±ÅŸ yapÄ±lmÄ±ÅŸ
+SELECT SUM(UnitPrice * Quantity) AS TotalSalesValue FROM [Order Details];
